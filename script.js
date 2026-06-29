@@ -1,3 +1,39 @@
+// ===== Web3Forms config (must match hidden input in index.html) =====
+const WEB3FORMS_URL = 'https://api.web3forms.com/submit';
+
+function getAccessKey() {
+    return document.querySelector('input[name="access_key"]')?.value?.trim() || '';
+}
+
+async function submitToWeb3Forms(payload) {
+    const accessKey = getAccessKey();
+    if (!accessKey) {
+        throw new Error('Web3Forms access key is missing. Add it to the form in index.html.');
+    }
+
+    const response = await fetch(WEB3FORMS_URL, {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+            Accept: 'application/json',
+        },
+        body: JSON.stringify({ access_key: accessKey, ...payload }),
+    });
+
+    let data;
+    try {
+        data = await response.json();
+    } catch {
+        throw new Error('Unexpected response from Web3Forms. Check your internet connection.');
+    }
+
+    if (!response.ok || !data.success) {
+        throw new Error(data.message || 'Something went wrong. Please try again.');
+    }
+
+    return data;
+}
+
 // 1. Mobile Menu Toggle
 const menuIcon = document.getElementById('menu-icon');
 const navbar = document.querySelector('.navbar');
@@ -50,71 +86,74 @@ const sectionObserver = new IntersectionObserver((entries) => {
 
 sections.forEach(section => sectionObserver.observe(section));
 
-// 4. Contact form handler
-function handleSubmit(e) {
-    e.preventDefault();
-    const btn = e.target.querySelector('button');
-    btn.textContent = '✓ Message Sent!';
-    btn.style.background = '#16a34a';
-    btn.style.borderColor = '#16a34a';
-    setTimeout(() => {
-        btn.innerHTML = 'Send Message <i class="fas fa-paper-plane"></i>';
-        btn.style.background = '';
-        btn.style.borderColor = '';
-        e.target.reset();
-    }, 3000);
-}
-
-// 3. Web3Forms Contact Form Submission
+// 4. Contact form (Web3Forms)
 const contactForm = document.getElementById('contactForm');
-const submitBtn   = document.getElementById('submitBtn');
-const formMsg     = document.getElementById('formMsg');
+const submitBtn = document.getElementById('submitBtn');
+const formMsg = document.getElementById('formMsg');
 
-contactForm.addEventListener('submit', async function (e) {
+contactForm.addEventListener('submit', async (e) => {
     e.preventDefault();
 
     submitBtn.disabled = true;
     submitBtn.innerHTML = 'Sending... <i class="fas fa-spinner fa-spin"></i>';
+    formMsg.style.display = 'none';
 
     const formData = new FormData(contactForm);
-    const object   = Object.fromEntries(formData);
-    const json     = JSON.stringify(object);
+    const payload = Object.fromEntries(formData.entries());
 
     try {
-        const res  = await fetch('https://api.web3forms.com/submit', {
-            method:  'POST',
-            headers: { 'Content-Type': 'application/json', 'Accept': 'application/json' },
-            body:    json
-        });
-        const data = await res.json();
+        await submitToWeb3Forms(payload);
 
-        if (data.success) {
-            formMsg.style.display = 'block';
-            formMsg.style.color   = '#22c55e';
-            formMsg.textContent   = '✓ Message sent! I will get back to you soon.';
-            contactForm.reset();
-        } else {
-            formMsg.style.display = 'block';
-            formMsg.style.color   = '#ef4444';
-            formMsg.textContent   = '✗ Something went wrong. Please try again.';
-        }
+        formMsg.style.display = 'block';
+        formMsg.style.color = '#22c55e';
+        formMsg.textContent = '✓ Message sent! I will get back to you soon.';
+        contactForm.reset();
     } catch (err) {
         formMsg.style.display = 'block';
-        formMsg.style.color   = '#ef4444';
-        formMsg.textContent   = '✗ Network error. Please try again.';
+        formMsg.style.color = '#ef4444';
+        formMsg.textContent = '✗ ' + err.message;
+        console.error('Web3Forms contact error:', err);
     }
 
     submitBtn.disabled = false;
     submitBtn.innerHTML = 'Send Message <i class="fas fa-paper-plane"></i>';
 
-    setTimeout(() => { formMsg.style.display = 'none'; }, 5000);
+    setTimeout(() => {
+        formMsg.style.display = 'none';
+    }, 6000);
 });
 
-// 4. Journey Tab Switcher
-function switchTab(tab) {
-    document.getElementById('tab-education').style.display  = tab === 'education'  ? 'block' : 'none';
+// 5. Portfolio visit notification (once per browser session)
+function notifyPortfolioVisit() {
+    if (sessionStorage.getItem('portfolioVisitSent')) return;
+
+    const referrer = document.referrer || 'Direct visit';
+    const pageUrl = window.location.href;
+
+    submitToWeb3Forms({
+        subject: 'New Portfolio Visit - Om Prakash Khatri',
+        name: 'Portfolio Visitor',
+        email: 'visitor@portfolio.local',
+        message: [
+            'Someone opened your portfolio.',
+            '',
+            `Time: ${new Date().toLocaleString()}`,
+            `Page: ${pageUrl}`,
+            `Referrer: ${referrer}`,
+            `Language: ${navigator.language || 'unknown'}`,
+        ].join('\n'),
+    })
+        .then(() => sessionStorage.setItem('portfolioVisitSent', '1'))
+        .catch((err) => console.warn('Visit notification skipped:', err.message));
+}
+
+notifyPortfolioVisit();
+
+// 6. Journey Tab Switcher
+function switchTab(tab, btn) {
+    document.getElementById('tab-education').style.display = tab === 'education' ? 'block' : 'none';
     document.getElementById('tab-experience').style.display = tab === 'experience' ? 'block' : 'none';
 
-    document.querySelectorAll('.tab-btn').forEach(btn => btn.classList.remove('active'));
-    event.currentTarget.classList.add('active');
+    document.querySelectorAll('.tab-btn').forEach(button => button.classList.remove('active'));
+    btn.classList.add('active');
 }
