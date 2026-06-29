@@ -151,7 +151,6 @@
                 </div>
             </div>
 
-            <!-- Certifications -->
             <div class="certs-section">
                 <h3 class="certs-title">Certifications & Training</h3>
                 <div class="certs-grid">
@@ -181,17 +180,15 @@
                 <h2>Education & <span class="accent">Experience</span></h2>
             </div>
 
-            <!-- Tab Buttons -->
             <div class="journey-tabs">
-                <button class="tab-btn active" onclick="switchTab('education')">
+                <button class="tab-btn active" type="button" onclick="switchTab('education', this)">
                     <i class="fas fa-graduation-cap"></i> Education
                 </button>
-                <button class="tab-btn" onclick="switchTab('experience')">
+                <button class="tab-btn" type="button" onclick="switchTab('experience', this)">
                     <i class="fas fa-briefcase"></i> Experience
                 </button>
             </div>
 
-            <!-- Education Timeline -->
             <div class="timeline" id="tab-education">
                 <div class="timeline-item">
                     <div class="timeline-dot"></div>
@@ -220,7 +217,6 @@
                 </div>
             </div>
 
-            <!-- Experience Timeline -->
             <div class="timeline" id="tab-experience" style="display:none;">
                 <div class="timeline-item">
                     <div class="timeline-dot work-dot"></div>
@@ -247,7 +243,7 @@
                     <div class="project-top">
                         <div class="project-icon"><i class="fas fa-store"></i></div>
                         <div class="project-links">
-                            <a href="https://github.com/28400Om/Glow-Petals" target="_blank" title="View on GitHub"><i class="fab fa-github"></i></a>
+                            <a href="https://github.com/28400Om/Glow-Petals" target="_blank" rel="noopener noreferrer" title="View on GitHub"><i class="fab fa-github"></i></a>
                         </div>
                     </div>
                     <h3>Glow & Petals</h3>
@@ -263,7 +259,7 @@
                     <div class="project-top">
                         <div class="project-icon"><i class="fas fa-tint"></i></div>
                         <div class="project-links">
-                            <a href="https://github.com/28400Om/HydrationTracker" target="_blank" title="View on GitHub"><i class="fab fa-github"></i></a>
+                            <a href="https://github.com/28400Om/HydrationTracker" target="_blank" rel="noopener noreferrer" title="View on GitHub"><i class="fab fa-github"></i></a>
                         </div>
                     </div>
                     <h3>Hydration Tracker</h3>
@@ -303,7 +299,7 @@
                 <form class="contact-form" id="contactForm">
                     <input type="hidden" name="access_key" value="5d5bd99c-6fd6-4363-ab23-941b338ae882">
                     <input type="hidden" name="subject" value="New Contact from Portfolio - Om Prakash Khatri">
-                    <input type="hidden" name="from_name" value="Om Portfolio">
+                    <input type="checkbox" name="botcheck" class="hidden" style="display:none" tabindex="-1" autocomplete="off">
                     <input type="text" name="name" placeholder="Your Name" required>
                     <input type="email" name="email" placeholder="Your Email" required>
                     <textarea name="message" placeholder="Your Message" rows="5" required></textarea>
