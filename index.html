@@ -180,8 +180,19 @@
                 <span class="section-tag">My Journey</span>
                 <h2>Education & <span class="accent">Experience</span></h2>
             </div>
-            <div class="timeline">
 
+            <!-- Tab Buttons -->
+            <div class="journey-tabs">
+                <button class="tab-btn active" onclick="switchTab('education')">
+                    <i class="fas fa-graduation-cap"></i> Education
+                </button>
+                <button class="tab-btn" onclick="switchTab('experience')">
+                    <i class="fas fa-briefcase"></i> Experience
+                </button>
+            </div>
+
+            <!-- Education Timeline -->
+            <div class="timeline" id="tab-education">
                 <div class="timeline-item">
                     <div class="timeline-dot"></div>
                     <div class="timeline-content">
@@ -191,7 +202,26 @@
                         <p>Currently pursuing BCA with focus on computer applications, programming, and networking.</p>
                     </div>
                 </div>
+                <div class="timeline-item">
+                    <div class="timeline-dot edu-dot"></div>
+                    <div class="timeline-content">
+                        <span class="timeline-date">+2 Level</span>
+                        <h3>+2 Management</h3>
+                        <p class="timeline-place"><i class="fas fa-school"></i> Shree Mahendra Model Secondary School, Gulmi</p>
+                    </div>
+                </div>
+                <div class="timeline-item">
+                    <div class="timeline-dot edu-dot"></div>
+                    <div class="timeline-content">
+                        <span class="timeline-date">SEE</span>
+                        <h3>School Leaving Certificate</h3>
+                        <p class="timeline-place"><i class="fas fa-school"></i> Shree Ghorle Secondary School, Gulmi</p>
+                    </div>
+                </div>
+            </div>
 
+            <!-- Experience Timeline -->
+            <div class="timeline" id="tab-experience" style="display:none;">
                 <div class="timeline-item">
                     <div class="timeline-dot work-dot"></div>
                     <div class="timeline-content">
@@ -201,26 +231,8 @@
                         <p>Supervised field operations and project workflows. Coordinated with teams and ensured timely delivery of project milestones.</p>
                     </div>
                 </div>
-
-                <div class="timeline-item">
-                    <div class="timeline-dot edu-dot"></div>
-                    <div class="timeline-content">
-                        <span class="timeline-date">+2 Level</span>
-                        <h3>+2 Management</h3>
-                        <p class="timeline-place"><i class="fas fa-school"></i> Shree Mahendra Model Secondary School, Gulmi</p>
-                    </div>
-                </div>
-
-                <div class="timeline-item">
-                    <div class="timeline-dot edu-dot"></div>
-                    <div class="timeline-content">
-                        <span class="timeline-date">SEE</span>
-                        <h3>School Leaving Certificate</h3>
-                        <p class="timeline-place"><i class="fas fa-school"></i> Shree Ghorle Secondary School, Gulmi</p>
-                    </div>
-                </div>
-
             </div>
+
         </section>
 
         <!-- PROJECTS -->
@@ -288,11 +300,15 @@
                         <span>Hadigaun, Kathmandu, Nepal</span>
                     </div>
                 </div>
-                <form class="contact-form" onsubmit="handleSubmit(event)">
-                    <input type="text" placeholder="Your Name" required>
-                    <input type="email" placeholder="Your Email" required>
-                    <textarea placeholder="Your Message" rows="5" required></textarea>
-                    <button type="submit" class="btn">Send Message <i class="fas fa-paper-plane"></i></button>
+                <form class="contact-form" id="contactForm">
+                    <input type="hidden" name="access_key" value="5d5bd99c-6fd6-4363-ab23-941b338ae882">
+                    <input type="hidden" name="subject" value="New Contact from Portfolio - Om Prakash Khatri">
+                    <input type="hidden" name="from_name" value="Om Portfolio">
+                    <input type="text" name="name" placeholder="Your Name" required>
+                    <input type="email" name="email" placeholder="Your Email" required>
+                    <textarea name="message" placeholder="Your Message" rows="5" required></textarea>
+                    <button type="submit" class="btn" id="submitBtn">Send Message <i class="fas fa-paper-plane"></i></button>
+                    <p id="formMsg" style="display:none; margin-top:10px; font-weight:600;"></p>
                 </form>
             </div>
         </section>
@@ -300,7 +316,7 @@
     </main>
 
     <footer>
-        <p>© 2025 <span class="accent">Om Prakash Khatri</span>. Designed & Built by Om Prakash Khatri</p>
+        <p>© 2025 <span class="accent">Om Prakash Khatri</span>. Designed & Built with ❤️ in Kathmandu.</p>
     </footer>
 
     <script src="script.js"></script>
